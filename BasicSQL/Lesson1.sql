@@ -96,7 +96,42 @@ the orders appear from greatest to least regardless of which account ID they wer
 Then they are sorted by account ID next. 
 (The secondary sorting by account ID is difficult to see here since only 
 if there were two orders with equal total dollar amounts would there need to be any sorting by account ID.)
-
-
-
 */
+
+
+/*
+Using the WHERE statement, we can display subsets of tables based on conditions that must be met. 
+You can also think of the WHERE command as filtering the data.
+*/
+
+/*Write a query that pulls the first 5 rows and all columns 
+from the orders table that have a dollar amount of gloss_amt_usd 
+greater than or equal to 1000.
+*/
+
+SELECT * 
+FROM orders
+WHERE gloss_amt_usd >= 1000
+LIMIT 5;
+
+
+/*
+Write aquery that pulls the first 10 rows and all columns 
+from the orders table that have a total_amt_usd less than 500.
+*/
+
+SELECT *
+FROM orders
+WHERE total_amt_usd < 500
+LIMIT 10;
+
+
+/*
+Filter the accounts table to include the company name, website, 
+and the primary point of contact (primary_poc) just for the Exxon Mobil company 
+in the accounts table.
+*/
+
+Select name, website, primary_poc
+FROM accounts
+WHERE name = 'Exxon Mobil';
