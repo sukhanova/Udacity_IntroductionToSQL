@@ -85,3 +85,108 @@ JOIN accounts a
 ON a.sales_rep_id = s.id
 JOIN orders o
 ON o.account_id = a.id;
+
+
+
+/*
+TYPES OF JOINS:
+- Left Join
+- Right Join
+- Full Outer Join
+*/
+
+/*INNER JOIN*/
+
+SELECT c.countryid, c.countryName, s.stateName
+FROM Country c
+JOIN State s
+ON c.countryid = s.countryid;
+
+/*LEFT JOIN*/
+SELECT c.countryid, c.countryName, s.stateName
+FROM Country c
+LEFT JOIN State s
+ON c.countryid = s.countryid;
+
+
+
+/*SQL Joins questions:*/
+
+/*
+1. Provide a table that provides the region for each sales_rep along with their associated accounts. 
+This time only for the Midwest region. Your final table should include: three columns: 
+- the region name, 
+- the sales rep name, 
+- account name. 
+Sort the accounts alphabetically (A-Z) according to the account name.*/
+
+SELECT region.name region, sales_reps.name, accounts.name account
+FROM region
+JOIN sales_reps
+ON region_id = region.id
+JOIN accounts
+ON sales_rep_id = sales_reps.id
+ORDER BY name ASC
+
+
+/*
+2. Provide a table that provides the region for each sales_rep along with their associated accounts. 
+This time only for accounts where the sales rep has a first name starting with S and in the Midwest region.
+ Your final table should include three columns: 
+ - the region name,
+ - the sales rep name, 
+ - account name. 
+ Sort the accounts alphabetically (A-Z) according to the account name.
+*/
+
+SELECT region.name region, sales_reps.name, accounts.name account
+FROM region
+JOIN sales_reps
+ON region_id = region.id
+JOIN accounts
+ON sales_rep_id = sales_reps.id
+WHERE sales_reps.name LIKE ('C%')
+AND region.name IN ('Midwest')
+ORDER BY accounts.name ASC
+
+
+/*
+3. Provide a table that provides the region for each sales_rep along with their associated accounts. 
+This time only for accounts where the sales rep has a last name starting with K and in the Midwest region. 
+Your final table should include three columns: 
+- the region name,
+- the sales rep name,
+- account name. 
+Sort the accounts alphabetically (A-Z) according to the account name.
+*/
+
+SELECT region.name region, sales_reps.name, accounts.name account
+FROM region
+JOIN sales_reps
+ON region_id = region.id
+JOIN accounts
+ON sales_rep_id = sales_reps.id
+WHERE sales_reps.name LIKE ('K%')
+AND region.name IN ('Midwest')
+ORDER BY accounts.name ASC
+
+/*
+4. Provide the name for each region for every order, 
+as well as the account name and the unit price they paid (total_amt_usd/total) for the order. 
+However, you should only provide the results if the standard order quantity exceeds 100. 
+Your final table should have 3 columns:
+- region name,
+- account name,
+- unit price. 
+In order to avoid a division by zero error, adding .01 to the denominator here is helpful total_amt_usd/(total+0.01).
+*/
+
+SELECT region.name region, accounts.name account, orders.total_amt_usd/(orders.total + 0.01) unit_price
+FROM region
+JOIN sales_reps
+ON sales_reps.region_id = region.id
+JOIN accounts
+ON accounts.sales_rep_id = sales_reps.id
+JOIN orders
+ON orders.account_id = accounts.id
+WHERE orders.standard_qty > 100
