@@ -1,3 +1,19 @@
+/*
+Foreign Key (Fk) - is a column in one table that is a primary key in a different table
+
+JOIN - is an INNER JOIN that only pulls data that exists in both tables.
+
+LEFT JOIN - is a JOIN that pulls all the data that exists in both tables, as well as all of the rows from the table in the FROM even if they do not exist in the JOIN statement.
+
+Partition by - A subclause of the OVER clause. Similar to GROUP BY.
+
+Primary Key (PK) - is a unique column in a particular table
+
+RIGHT JOIN - is a JOIN pulls all the data that exists in both tables, as well as all of the rows from the table in the JOIN even if they do not exist in the FROM statement.
+
+*/
+
+
 
 /*
 the SELECT clause indicates which column(s) of data you'd like to see in the output 
@@ -190,3 +206,76 @@ ON accounts.sales_rep_id = sales_reps.id
 JOIN orders
 ON orders.account_id = accounts.id
 WHERE orders.standard_qty > 100
+
+/*
+5. Provide the name for each region for every order, as well as the account name 
+and the unit price they paid (total_amt_usd/total) for the order. 
+However, you should only provide the results if:
+ - the standard order quantity exceeds 100 
+ - and the poster order quantity exceeds 50. 
+ Your final table should have 3 columns: 
+ - region name,
+ - account name,
+ - and unit price. 
+ Sort for the smallest unit price first. 
+ In order to avoid a division by zero error, adding .01 to the denominator here is helpful (total_amt_usd/(total+0.01).\
+*/
+
+SELECT region.name region, accounts.name account, orders.total_amt_usd/(orders.total + 0.01) unit_price
+FROM region
+JOIN sales_reps
+ON sales_reps.region_id = region.id
+JOIN accounts
+ON accounts.sales_rep_id = sales_reps.id
+JOIN orders
+ON orders.account_id = accounts.id
+WHERE orders.standard_qty > 100 AND orders.poster_qty > 50
+ORDER BY unit_price;
+
+
+/*
+6. Provide the name for each region for every order, as well as the account name 
+and the unit price they paid (total_amt_usd/total) for the order. 
+However, you should only provide the results if:
+- the standard order quantity exceeds 100
+-  and the poster order quantity exceeds 50. 
+Your final table should have 3 columns: region name, account name, and unit price. 
+Sort for the largest unit price first.
+*/
+SELECT r.name region, a.name account, o.total_amt_usd/(o.total + 0.01) unit_price
+FROM region r
+JOIN sales_reps s
+ON s.region_id = r.id
+JOIN accounts a
+ON a.sales_rep_id = s.id
+JOIN orders o
+ON o.account_id = a.id
+WHERE o.standard_qty > 100 AND o.poster_qty > 50
+ORDER BY unit_price DESC;
+
+/*
+7. What are the different channels used by account id 1001? 
+Your final table should have only 2 columns: account name and the different channels. 
+You can try SELECT DISTINCT to narrow down the results to only the unique values.
+*/
+SELECT DISTINCT a.name, w.channel
+FROM accounts a
+JOIN web_events w
+ON a.id = w.account_id
+WHERE a.id = '1001';
+
+/*
+8. Find all the orders that occurred in 2015. 
+Your final table should have 4 columns:
+- occurred_at,
+- account name,
+- order total,
+- order total_amt_usd.
+*/
+
+SELECT o.occurred_at, a.name, o.total, o.total_amt_usd
+FROM accounts a
+JOIN orders o
+ON o.account_id = a.id
+WHERE o.occurred_at BETWEEN '01-01-2015' AND '01-01-2016'
+ORDER BY o.occurred_at DESC;
