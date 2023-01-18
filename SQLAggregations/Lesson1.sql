@@ -158,3 +158,79 @@ FROM (SELECT total_amt_usd
    LIMIT 3457) AS Table1
 ORDER BY total_amt_usd DESC
 LIMIT 2;
+
+
+/*GROUP BY*/
+/*GROUP BY can be used to aggregate data within subsets of the data. 
+For example, grouping for different accounts, different regions,
+ or different sales representatives.*/
+
+ SELECT account_id,
+       SUM(standard_qty) AS standard,
+       SUM(gloss_qty) AS gloss,
+       SUM(poster_qty) AS poster
+FROM orders
+GROUP BY account_id
+ORDER BY account_id
+
+
+/*Questions: GROUP BY*/
+
+/*1. Which account (by name) placed the earliest order? 
+Your solution should have the account name and the date of the order*/
+SELECT name, occurred_at
+FROM accounts
+JOIN orders
+ON id = account_id
+ORDER BY occurred_at
+LIMIT 1;
+
+/*2. Find the total sales in usd for each account.
+ You should include two columns - the total sales for each company's orders
+  in usd and the company name.
+*/
+SELECT name, SUM(total_amt_usd) total_in_sales
+FROM orders
+JOIN accounts
+ON accounts.id = orders.account_id
+GROUP BY name;
+
+
+/*3. Via what channel did the most recent (latest) web_event occur,
+ which account was associated with this web_event?
+  Your query should return only three values - the date, channel, and account name.
+*/
+SELECT web_events.occurred_at, web_events.channel, accounts.name
+FROM web_events
+JOIN accounts
+ON web_events.account_id = accounts.id
+ORDER BY web_events.occurred_at DESC
+LIMIT 1;
+
+
+/*4. Find the total number of times each type of channel from the web_events was used.
+ Your final table should have two columns - the channel and the number of times the channel was used.
+*/
+
+SELECT web_events.channel, COUNT(*)
+FROM web_events
+GROUP BY web_events.channel;
+
+/*5. Who was the primary contact associated with the earliest web_event?*/
+SELECT accounts.primary_poc
+FROM web_events
+JOIN accounts
+ON accounts.id = web_events.account_id
+ORDER BY web_events.occurred_at
+LIMIT 1;
+
+/*6. What was the smallest order placed by each account in terms of total usd.
+ Provide only two columns - the account name and the total usd.
+  Order from smallest dollar amounts to largest.*/
+
+SELECT accounts.name, MIN(total_amt_usd) smallest_order
+FROM accounts
+JOIN orders
+ON accounts.id = orders.account_id
+GROUP BY accounts.name
+ORDER BY smallest_order;
