@@ -234,3 +234,39 @@ JOIN orders
 ON accounts.id = orders.account_id
 GROUP BY accounts.name
 ORDER BY smallest_order;
+
+/*GROUP BY Part II*/
+
+/*You can GROUP BY multiple columns at once.
+This is often useful to aggregate across a number of different segments.
+The order of columns listed in the ORDER BY clause does make a difference.
+ You are ordering the columns from left to right.*/
+
+ SELECT account_id,
+       channel,
+       COUNT(id) as events
+FROM web_events
+GROUP BY account_id, channel
+ORDER BY account_id, channel
+
+
+
+SELECT account_id,
+       channel,
+       COUNT(id) as events
+FROM web_events
+GROUP BY account_id, channel
+ORDER BY account_id, channel DESC
+
+/*Questions: GROUP BY Part II*/
+/*For each account, determine the average amount of each type of paper 
+they purchased across their orders.
+Your result should have four columns - one for the account name 
+and one for the average quantity purchased for each of the paper types for each account.
+  */
+
+SELECT accounts.name
+FROM accounts
+JOIN orders
+ON accounts.id = orders.account_id
+GROUP BY name
