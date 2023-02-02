@@ -270,3 +270,24 @@ FROM accounts
 JOIN orders
 ON accounts.id = orders.account_id
 GROUP BY name
+
+
+/*DISTINCT*/
+
+/*Use DISTINCT to test if there are any accounts associated with more than one region.*/
+SELECT a.id as account_id, r.id as region_id, a.name as account_name, r.name as region_name
+FROM accounts a
+JOIN sales_reps s
+ON s.id = a.sales_rep_id
+JOIN region r
+ON r.id = s.region_id
+
+
+SELECT DISTINCT id, name
+FROM accounts;
+
+/*
+Q: Have any sales reps worked on more than one account?
+*/
+SELECT DISTINCT id, name
+from sales_reps
